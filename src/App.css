@@ -1,88 +1,41 @@
-body {
-  margin: 0px;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-table {
-  border-spacing: 0;
-  border: 1px solid black;
-}
 
-table th,
-td {
-  margin: 0;
-  padding: 0.5rem;
-  border-bottom: 1px solid black;
-  border-right: 1px solid black;
-}
-
-table tr:last-child td {
-  border-bottom: 0;
-}
-
-table th,
-td {
-  margin: 0;
-  padding: 0.5rem;
-  border-bottom: 1px solid black;
-  border-right: 1px solid black;
-}
-
-table th:last-child,
-td:last-child {
-  border-right: 0;
-}
-
-.layout {
-  display: flex;
-  gap: 16px;
-}
-
-@media screen and (max-width: 751px) {
-  .layout {
-    display: block;
+.navbar {
+    background-color: light-dark(var(--mantine-color-white), var(--mantine-color-dark-6));
+    height: rem(800px);
+    width: rem(300px);
+    padding: var(--mantine-spacing-md);
+    padding-bottom: 0;
+    display: flex;
+    flex-direction: column;
+    border-right: rem(1px) solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
   }
-}
-
-.layout .content {
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-}
-
-.breadcrumb {
-  display: flex;
-  gap: 24px;
-  list-style-type: "/  ";
-  padding: 8px 16px;
-  border-bottom: 1px solid lightgray;
-}
-
-.breadcrumb a {
-  color: blue;
-  text-decoration: none;
-}
-
-.menu {
-  flex-shrink: 0;
-  padding: 8px 16px;
-  border-right: 1px solid lightgray;
-}
-
-.menu a {
-  color: black;
-}
-
-.menu .active {
-  font-weight: bold;
-}
-
-@media screen and (max-width: 751px) {
-  .menu {
-    border-right: none;
-    border-bottom: 1px solid lightgray;
+  
+  .header {
+    padding: var(--mantine-spacing-md);
+    padding-top: 0;
+    margin-left: calc(var(--mantine-spacing-md) * -1);
+    margin-right: calc(var(--mantine-spacing-md) * -1);
+    color: light-dark(var(--mantine-color-black), var(--mantine-color-white));
+    border-bottom: rem(1px) solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
   }
-}
-
-.menu ul {
-  padding-left: 16px;
-}
+  
+  .links {
+    flex: 1;
+    margin-left: calc(var(--mantine-spacing-md) * -1);
+    margin-right: calc(var(--mantine-spacing-md) * -1);
+  }
+  
+  .linksInner {
+    padding-top: var(--mantine-spacing-xl);
+    padding-bottom: var(--mantine-spacing-xl);
+  }
+  
+  .footer {
+    margin-left: calc(var(--mantine-spacing-md) * -1);
+    margin-right: calc(var(--mantine-spacing-md) * -1);
+    border-top: rem(1px) solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+  }

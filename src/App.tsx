@@ -1,42 +1,111 @@
-import { GitHubBanner, Refine, WelcomePage } from "@refinedev/core";
-import { DevtoolsPanel, DevtoolsProvider } from "@refinedev/devtools";
-import { RefineKbar, RefineKbarProvider } from "@refinedev/kbar";
+import { BrowserRouter, Route, Routes, Outlet } from "react-router-dom";
+import { CatchAllNavigate } from "@refinedev/react-router-v6";
+import { AuthProvider, Authenticated, Refine } from "@refinedev/core";
+import { DashboardPage } from "./page/dashboard";
+import "@mantine/core/styles.css";
+import { MantineProvider } from "@mantine/core";
+import { FormLogin } from "./page/form-login";
 
-import routerBindings, {
-  DocumentTitleHandler,
-  UnsavedChangesNotifier,
-} from "@refinedev/react-router-v6";
-import dataProvider from "@refinedev/simple-rest";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import "./App.css";
+const authProvider: AuthProvider = {
+  login: async () => {
+    const token = localStorage.getItem("auth");
+    if (token) {
+      localStorage.setItem("auth", JSON.stringify(token));
+      return {
+        success: true,
+        redirectTo: "/",
+        successNotification: {
+          message: "Login Successful",
+          description: "You have successfully logged in.",
+        },
+      };
+    }
+    return {
+      success: false,
+      error: {
+        message: "Login Error",
+        name: "Invalid email or password",
+      },
+    };
+  },
+  check: async () => {
+    const token = localStorage.getItem("auth");
+
+    if (token) {
+      return {
+        authenticated: true,
+        redirectTo: "/",
+      };
+    }
+    return {
+      authenticated: false,
+      logout: true,
+      redirectTo: "/login",
+      error: {
+        message: "Check failed",
+        name: "Unauthorized",
+      },
+    };
+  },
+  logout: async () => {
+    localStorage.removeItem("auth");
+    return {
+      success: true,
+      redirectTo: "/login",
+    };
+  },
+  onError: (error) => {
+    const status = error.status;
+    if (status === 418) {
+      return Promise.resolve({
+        logout: true,
+        redirectTo: "/login",
+        error: new Error(error),
+      });
+    }
+    return Promise.resolve({});
+  },
+};
 
 function App() {
   return (
-    <BrowserRouter>
-      <GitHubBanner />
-      <RefineKbarProvider>
-        <DevtoolsProvider>
-          <Refine
-            dataProvider={dataProvider("https://api.fake-rest.refine.dev")}
-            routerProvider={routerBindings}
-            options={{
-              syncWithLocation: true,
-              warnWhenUnsavedChanges: true,
-              useNewQueryKeys: true,
-              projectId: "R4eutp-VCF22Q-V11B4g",
-            }}
-          >
-            <Routes>
-              <Route index element={<WelcomePage />} />
-            </Routes>
-            <RefineKbar />
-            <UnsavedChangesNotifier />
-            <DocumentTitleHandler />
-          </Refine>
-          <DevtoolsPanel />
-        </DevtoolsProvider>
-      </RefineKbarProvider>
-    </BrowserRouter>
+    <MantineProvider>
+      <BrowserRouter>
+        <Refine
+          authProvider={authProvider}
+          resources={[
+            {
+              name: "dashboard",
+            },
+          ]}
+        >
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <Authenticated
+                  key="authenticated-inner"
+                  fallback={<CatchAllNavigate to="/login" />}
+                >
+                  <DashboardPage/>
+                </Authenticated>
+              }
+            ></Route>
+            <Route path="/login" element={<FormLogin />} />
+            {/* <Route
+              element={
+                <Authenticated
+                  key="authenticated-inner"
+                  redirectOnFail="/login"
+                >
+                  <Outlet />
+                </Authenticated>
+              }
+            ></Route> */}
+          </Routes>
+        </Refine>
+      </BrowserRouter>
+    </MantineProvider>
   );
 }
 

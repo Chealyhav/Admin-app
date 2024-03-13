@@ -16,7 +16,7 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
-  "include": ["src", "vite.config.ts"],
+  "include": ["src", "vite.config.ts", "src/page/form-login.tsx"],
   "references": [
     {
       "path": "./tsconfig.node.json"
